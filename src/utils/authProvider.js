@@ -1,41 +1,37 @@
-import axios from "axios";
-import { createContext, useContext, useEffect, useMemo, useReducer, useState } from "react";
+// utils/authProvider.js
+import React, { createContext, useContext, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
+import { setToken as setTokenAction, removeToken as removeTokenAction } from '../Actions/authActions';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  // State to hold the authentication token
-  // const [token, setToken_] = useState(localStorage.getItem("token"));
-  const [token, setToken_] = useReducer((prev, cur) => {
-    localStorage.setItem("userData", JSON.stringify(cur));
-    return cur;
-  }, JSON.parse(localStorage.getItem("userData")));
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
 
-  // Function to set the authentication token
   const setToken = (newToken) => {
-    setToken_(newToken);
+    dispatch(setTokenAction(newToken));
   };
 
-  useEffect(() => {
+  const removeToken = () => {
+    dispatch(removeTokenAction());
+  };
+
+  useMemo(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = "Bearer " + token.token;
-      localStorage.setItem("token", token);
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token.token;
     } else {
-      delete axios.defaults.headers.common["Authorization"];
-      localStorage.removeItem("token");
+      delete axios.defaults.headers.common['Authorization'];
     }
   }, [token]);
 
-  // Memoized value of the authentication context
-  const contextValue = useMemo(
-    () => ({
-      token,
-      setToken,
-    }),
-    [token]
-  );
+  const contextValue = useMemo(() => ({
+    token,
+    setToken,
+    removeToken,
+  }), [token]);
 
-  // Provide the authentication context to the children components
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
