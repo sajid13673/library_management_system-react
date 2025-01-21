@@ -139,9 +139,11 @@ function App() {
       });
   }
   React.useEffect(() => {
-    token?.role === "admin" && getMembers("", 9);
-    getBooks();
-    getUser();
+    if (token) {
+      token?.role === "admin" && getMembers("", 9);
+      getBooks();
+      getUser();
+    }
   }, [token]);
   useEffect(() => {
     getBooks();
