@@ -6,11 +6,11 @@ const initialState = {
 
 const memberReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'FETCH_MEMBER_REQUEST':
+        case 'FETCH_MEMBERS_REQUEST':
             return { ...state, loading: true };
-        case 'FETCH_MEMBER_SUCCESS':
+        case 'FETCH_MEMBERS_SUCCESS':
             return { ...state, members: action.payload, loading: false };
-        case 'FETCH_MEMBER_FAILURE':
+        case 'FETCH_MEMBERS_FAILURE':
             return { ...state, error: action.payload, loading: false};
         default:
             return state;

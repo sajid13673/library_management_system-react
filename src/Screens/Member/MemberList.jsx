@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MembersCard from "../../Components/Member/MembersCard";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -13,10 +13,16 @@ import {
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Loading from "../../Components/Loading";
+import { useSelector, useDispatch } from "react-redux";
+import {fetchMembers} from "../../Actions/memberActions"
 
 export default function MemberList(props) {
-  const totalPages = props.totalPages;
-  const data = Array.from(props.members);
+  const dispatch = useDispatch();
+  const membersData = useSelector((state) => state.members.members);
+  console.log(membersData);
+  const [page, setPage] = useState(1)
+  const totalPages = membersData && membersData.data ? membersData.data.last_page : [];
+  const data = Array.from(membersData && membersData.data ? membersData.data.data : []);
   const navigate = useNavigate();
   function handleBorrowings(id) {
     navigate("/member-borrowing-list", { state: { memberId: id } });
@@ -33,14 +39,17 @@ export default function MemberList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("member deleted");
-          props.getMembers();
+          dispatch(fetchMembers(page, 9));
         }
       })
       .catch((err) => console.log(err));
   }
   function handleChange(e, value) {
-    props.setMemberPage(value);
+    setPage(value);
   }
+  useEffect(()=> {
+    dispatch(fetchMembers(page,9))
+  },[page])
   return (
     <Box flex={1} display="flex" flexDirection="column" p={2} gap={2}>
       <Button
@@ -84,7 +93,7 @@ export default function MemberList(props) {
         <Stack spacing={2} sx={{ mt: "auto" }}>
           <Pagination
             count={totalPages}
-            page={props.memberPage}
+            page={page}
             color="primary"
             onChange={handleChange}
           />

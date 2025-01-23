@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "../../Screens/Login";
 import AddMember from "../../Screens/Member/AddMember";
@@ -140,13 +140,9 @@ function App() {
   }
   React.useEffect(() => {
     if (token) {
-      token?.role === "admin" && getMembers("", 9);
       getUser();
     }
   }, [token]);
-  useEffect(() => {
-    getMembers();
-  }, [memberPage]);
   return (
     <ThemeProvider theme={theme}>
       <Paper sx={{ minHeight: "100vh", minWidth: "18rem", display: 'flex', flexDirection: 'column' }}>
@@ -222,12 +218,7 @@ function App() {
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <MemberList
-                        members={members.data ? members.data : []}
                         defaultImage={defaultImage}
-                        getMembers={() => getMembers()}
-                        totalPages={members.last_page ? members.last_page : 1}
-                        memberPage={memberPage}
-                        setMemberPage={(page) => setMemberPage(page)}
                         loading={loading}
                       />
                     </>
