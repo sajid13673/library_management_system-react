@@ -141,13 +141,9 @@ function App() {
   React.useEffect(() => {
     if (token) {
       token?.role === "admin" && getMembers("", 9);
-      getBooks();
       getUser();
     }
   }, [token]);
-  useEffect(() => {
-    getBooks();
-  }, [bookPage]);
   useEffect(() => {
     getMembers();
   }, [memberPage]);
@@ -164,7 +160,7 @@ function App() {
                       <NavBar
                         darkMode={darkMode}
                         setDarkMode={(bool) => setDarkMode(bool)}
-                        
+
                       />
                       <Home user={user}/>
                     </>
@@ -174,17 +170,12 @@ function App() {
                   path="/book-list"
                   element={
                     <>
-                      <NavBar 
+                      <NavBar
                       darkMode={darkMode}
                       setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <BookList
-                        books={books.data ? books.data : []}
-                        totalPages={books.last_page ? books.last_page : 1}
-                        bookPage={bookPage}
-                        setBookPage={(page) => setBookPage(page)}
                         defaultImage={defaultImage}
-                        getBooks={() => getBooks()}
                         loading={loading}
                       />
                     </>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BookCard from "../../Components/Book/BookCard";
 import axios from "axios";
@@ -11,10 +11,17 @@ import {
   Typography,
 } from "@mui/material";
 import Loading from "../../Components/Loading";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchBooks } from "../../Actions/bookActions";
 
 export default function BookList(props) {
-  const totalPages = props.totalPages;
-  const data = Array.from(props.books);
+  const dispatch = useDispatch();
+  const booksData = useSelector((state) => state.books.books);
+  console.log(booksData);
+  
+  const [page, setPage] = useState(1);
+  const totalPages = booksData && booksData.data ? booksData.data.last_page : 1;
+  const data = Array.from(booksData && booksData.data ? booksData.data.data : []);
   const navigate = useNavigate();
   function handleBookEdit(id) {
     console.log(id);
@@ -26,7 +33,7 @@ export default function BookList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("book deleted");
-          props.getBooks();
+          dispatch(fetchBooks(1,9));
         }
       })
       .catch((err) => console.log(err));
@@ -35,9 +42,12 @@ export default function BookList(props) {
     navigate("/add-borrowing", { state: { bookId: bookId } });
   }
   function handleChange(e, value) {
-    props.setBookPage(value);
+    setPage(value);
   }
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    console.log("get Book");
+    dispatch(fetchBooks(page,9));
+  }, [page]);
   return (
     <Box p={3} flex={1} display="flex" flexDirection="column" gap={2}>
       <Grid container spacing={2}>
@@ -72,7 +82,7 @@ export default function BookList(props) {
       <Stack spacing={2} sx={{ mt: "auto" }}>
         <Pagination
           count={totalPages}
-          page={props.bookPage}
+          page={page}
           color="primary"
           onChange={handleChange}
         />
