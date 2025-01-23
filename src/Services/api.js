@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuth } from '../Utils/authProvider'; // Import useAuth or an alternative method to get the token
+import { getToken } from '../Utils/getToken'; // Import the helper function to get the token
 
 const api = axios.create({
     baseURL: process.env.REACT_APP_API_BASE_URL,
@@ -8,7 +8,7 @@ const api = axios.create({
 // Adding a request interceptor
 api.interceptors.request.use(
     (config) => {
-        const { token } = useAuth(); // Get the token using useAuth or another method
+        const token = getToken(); 
         if (token) {
             config.headers['Authorization'] = `Bearer ${token.token}`;
         }
