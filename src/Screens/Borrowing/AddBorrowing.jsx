@@ -18,8 +18,12 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading";
+import { useDispatch } from "react-redux";
+import { fetchBooks } from "../../Actions/bookActions";
+import { fetchMembers } from "../../Actions/memberActions";
 
-function AddBorrowing(props) {
+function AddBorrowing() {
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const bookId = location.state.bookId;
@@ -80,8 +84,8 @@ function AddBorrowing(props) {
         .post("http://127.0.0.1:8000/api/borrowing", formData)
         .then((res) => {
           if (res.data.status) {
-            props.getBooks();
-            props.getMembers();
+            dispatch(fetchBooks)
+            dispatch(fetchMembers)
             navigate("/");
           }
         })

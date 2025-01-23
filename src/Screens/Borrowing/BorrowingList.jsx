@@ -10,7 +10,11 @@ import {
   Box,
 } from "@mui/material";
 import Loading from "../../Components/Loading";
+import { useDispatch } from "react-redux";
+import { fetchBooks } from "../../Actions/bookActions";
+import { fetchMembers } from "../../Actions/memberActions";
 function BorrowingList(props) {
+  const dispatch = useDispatch();
   const [borrowings, setBorrowings] = React.useState([]);
   const [totalPages, setTotalPages] = React.useState(1);
   const [borrowingPage, setBorrowingPage] = React.useState(1);
@@ -36,8 +40,8 @@ function BorrowingList(props) {
   async function handleConfirmReturn(id, formData, book) {
     await props.handleConfirmReturn(id, formData, book).then((res) => {
       if (res) {
-        props.getBooks();
-        props.getMembers();
+        dispatch(fetchBooks())
+        dispatch(fetchMembers())
         getBorrowings();
       }
     });

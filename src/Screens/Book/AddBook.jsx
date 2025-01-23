@@ -3,7 +3,10 @@ import BookForm from "../../Components/Book/BookForm";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { fetchBooks } from "../../Actions/bookActions";
 function AddBook(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   async function handleSubmit(values) {
     const formData = new FormData();
@@ -12,7 +15,7 @@ function AddBook(props) {
       .post("http://127.0.0.1:8000/api/book", formData)
       .then((res) => {
         if (res.data.status) {
-          props.getBooks();
+          dispatch(fetchBooks());
           navigate("/");
         }
       })

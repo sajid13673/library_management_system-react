@@ -23,8 +23,6 @@ import UserBorrowings from "../../Screens/Borrowing/UserBorrowings";
 function App() {
   const defaultImage =
     "https://firebasestorage.googleapis.com/v0/b/laravel-product-list-frontend.appspot.com/o/images%2Fno%20image.jpg?alt=media&token=cfaed1bd-c1f4-4566-8dca-25b05e101829";
-  const [members, setMembers] = React.useState({});
-  const [books, setBooks] = React.useState({});
   const [loading, setLoading] = React.useState(false);
   function validateEmail(str) {
     return !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(str);
@@ -32,10 +30,6 @@ function App() {
   function validateOnlyNumbers(str) {
     return /^[0-9]*$/.test(str);
   }
-  const [bookPage, setBookPage] = React.useState(1);
-  const [booksPerPage, setBooksPerPage] = React.useState(9);
-  const [memberPage, setMemberPage] = React.useState(1);
-  const [membersPerPage, setMembersPerPage] = React.useState(9);
   const [darkMode, setDarkMode] = useState(false);
   const [user, setUser] = React.useState({})
   const theme = createTheme({
@@ -68,37 +62,7 @@ function App() {
     },
   });
   const {token} = useAuth()
-  const getMembers = async () => {
-    setLoading(true);
-    await axios
-      .get(
-        `http://127.0.0.1:8000/api/member?page=${memberPage}&per_page=${membersPerPage}`
-      )
-      .then((res) => {
-        console.log(res.data.data);
-        setMembers(res.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-      });
-  };
-  const getBooks = async () => {
-    setLoading(true);
-    const link = token?.role === "admin" ? `http://127.0.0.1:8000/api/book` : `http://127.0.0.1:8000/api/member_book`;
-    await axios
-      .get(
-        `${link}?page=${bookPage}&per_page=${booksPerPage}`
-      )
-      .then((res) => {
-        console.log(res.data.data);
-        setBooks(res.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-      });
-  };
+
   function handleDeleteBorrowing(id) {
     return new Promise(function (resolve, reject) {
       axios
@@ -203,7 +167,6 @@ function App() {
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <AddBook
-                        getBooks={() => getBooks()}
                         validateOnlyNumbers={(str) => validateOnlyNumbers(str)}
                       />
                     </>
@@ -233,7 +196,6 @@ function App() {
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <EditBook
-                        getBooks={() => getBooks()}
                         validateOnlyNumbers={(str) => validateOnlyNumbers(str)}
                       />
                     </>
@@ -248,7 +210,6 @@ function App() {
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <EditMember
-                        getMembers={() => getMembers()}
                         validateEmail={(str) => validateEmail(str)}
                         validateOnlyNumbers={(str) => validateOnlyNumbers(str)}
                       />
@@ -263,10 +224,7 @@ function App() {
                         darkMode={darkMode}
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
-                      <AddBorrowing
-                        getBooks={() => getBooks()}
-                        getMembers={() => getMembers()}
-                      />
+                      <AddBorrowing/>
                     </>
                   }
                 />
@@ -282,8 +240,6 @@ function App() {
                         handleConfirmReturn={(id, formData, book) =>
                           handleConfirmReturn(id, formData, book)
                         }
-                        getBooks={() => getBooks()}
-                        getMembers={() => getMembers()}
                         handleDeleteBorrowing={(id) =>
                           handleDeleteBorrowing(id)
                         }
@@ -300,8 +256,6 @@ function App() {
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <BorrowingList
-                        getBooks={() => getBooks()}
-                        getMembers={() => getMembers()}
                         handleDeleteBorrowing={(id) =>
                           handleDeleteBorrowing(id)
                         }
@@ -321,7 +275,6 @@ function App() {
                         setDarkMode={(bool) => setDarkMode(bool)}
                       />
                       <AddMember
-                        getMembers={() => getMembers()}
                         validateEmail={(str) => validateEmail(str)}
                         validateOnlyNumbers={(str) => validateOnlyNumbers(str)}
                       />

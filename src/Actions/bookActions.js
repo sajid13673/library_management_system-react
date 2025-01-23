@@ -7,7 +7,7 @@ export const fetchBooks = (page, perPage) => {
     try {
       const state = getState();
       const url = state.auth.token?.role === 'admin' ? '/book' : '/member_book';
-      const response = await get(`${url}?page=${page}&per_page=${perPage}`);
+      const response = await get(`${url}?page=${page || 1}&per_page=${perPage || 9}`);
       dispatch({ type: 'FETCH_BOOKS_SUCCESS', payload: response.data });
     } catch (error) {
       dispatch({ type: 'FETCH_BOOKS_FAILURE', payload: error });

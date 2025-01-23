@@ -4,8 +4,11 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { fetchMembers } from "../../Actions/memberActions";
 
 function EditMember(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const memberId = location.state.id;
@@ -28,7 +31,7 @@ function EditMember(props) {
       .then((res) => {
         if (res.data.status) {
           navigate("/member-list");
-          props.getMembers();
+          dispatch(fetchMembers())
         }
       });
   };

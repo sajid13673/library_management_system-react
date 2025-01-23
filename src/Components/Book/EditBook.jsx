@@ -3,8 +3,11 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import BookForm from "./BookForm";
 import { Box } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { fetchBooks } from "../../Actions/bookActions";
 
 function EditBook(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.state.id;
@@ -26,7 +29,7 @@ function EditBook(props) {
       .then((res) => {
         if (res.data.status) {
           navigate("/");
-          props.getBooks();
+          dispatch(fetchBooks(1,9));
         }
       })
       .catch((err) => console.log(err));

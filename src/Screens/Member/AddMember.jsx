@@ -3,15 +3,17 @@ import MemberForm from "../../Components/Member/MemberForm";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
-
+import { useDispatch } from "react-redux";
+import { fetchMembers } from "../../Actions/memberActions";
 function AddMember(props) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSubmit = async (formData, formik) => {
     axios
       .post("http://127.0.0.1:8000/api/member", formData)
       .then((res) => {
         if (res.data.status) {
-          props.getMembers();
+          dispatch(fetchMembers());
           navigate("/member-list");
         }
       })
