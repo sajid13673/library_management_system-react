@@ -1,5 +1,4 @@
 import { Container, Grid, Typography } from "@material-ui/core";
-import axios from "axios";
 import React from "react";
 import BorrowingCard from "../../Components/Borrowing/BorrowingCard";
 import { useLocation } from "react-router-dom";
@@ -8,8 +7,9 @@ import Loading from "../../Components/Loading";
 import { useDispatch } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import { fetchMembers } from "../../Actions/memberActions";
-
+import useApi from "../../Hooks/useApi";
 function MemberBorrowingList(props) {
+  const { fetchData } = useApi();
   const dispatch = useDispatch();
   const location = useLocation();
   const memberId = location.state.memberId;
@@ -21,10 +21,10 @@ function MemberBorrowingList(props) {
   const borrwings = member.borrowing ? Array.from(member.borrowing.data) : [];
   async function getMemberWithBorrowings() {
     setLoading(true);
-    await axios
-      .get(
-        `http://127.0.0.1:8000/api/member/${memberId}?borrowing=1&page=${borrowingPage}&per_page=${borrowingsPerPage}`
-      )
+    await fetchData({
+      method: "GET",
+      url: `http://127.0.0.1:8000/api/member/${memberId}?borrowing=1&page=${borrowingPage}&per_page=${borrowingsPerPage}`
+      })
       .then((res) => {
         if (res.data.status) {
           setLoading(false);

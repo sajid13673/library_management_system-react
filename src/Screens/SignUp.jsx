@@ -1,10 +1,10 @@
 import { Box, Button, FormControl, Input, InputLabel } from "@mui/material";
 import React from "react";
 import { useFormik } from "formik";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import useApi from "../Hooks/useApi";
 function SignUp() {
+  const { fetchData } = useApi();
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -15,11 +15,13 @@ function SignUp() {
       address: "",
       phone_number: "",
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log(values);
 
-      axios
-        .post(`http://127.0.0.1:8000/api/register`, values)
+      await fetchData({
+        method: "POST", 
+        url: `http://127.0.0.1:8000/api/register`, 
+        data: values})
         .then((res) => {
           res.status && navigate("/login");
         })

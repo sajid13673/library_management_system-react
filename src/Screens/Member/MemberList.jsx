@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MembersCard from "../../Components/Member/MembersCard";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   Pagination,
   Stack,
@@ -15,8 +14,9 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Loading from "../../Components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import {fetchMembers} from "../../Actions/memberActions"
-
+import useApi from "../../Hooks/useApi";
 export default function MemberList(props) {
+  const { fetchData } = useApi();
   const dispatch = useDispatch();
   const membersData = useSelector((state) => state.members.members);
   console.log(membersData);
@@ -33,9 +33,8 @@ export default function MemberList(props) {
   function handleEditMember(id) {
     navigate("/edit-member", { state: { id: id } });
   }
-  function handleDeleteMember(id) {
-    axios
-      .delete("http://127.0.0.1:8000/api/member/" + id)
+  async function handleDeleteMember(id) {
+    await fetchData({method: "DELETE", url: `http://127.0.0.1:8000/api/member/${id}`})
       .then((res) => {
         if (res.data.status) {
           console.log("member deleted");

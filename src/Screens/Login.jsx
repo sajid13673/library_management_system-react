@@ -1,7 +1,6 @@
 import React from "react";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { useFormik } from "formik";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Utils/authProvider";
 import {
@@ -14,8 +13,9 @@ import {
   InputAdornment,
   InputLabel,
 } from "@mui/material";
-
+import useApi from "../Hooks/useApi";
 export default function Login(props) {
+  const { fetchData } = useApi();
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -41,9 +41,11 @@ export default function Login(props) {
       password: "",
     },
     validate: validate,
-    onSubmit: (values) => {
-      axios
-        .post("http://127.0.0.1:8000/api/login", values)
+    onSubmit: async (values) => {
+      await fetchData({
+        method: "POST", 
+        url: "http://127.0.0.1:8000/api/login", 
+        data: values})
         .then((res) => {
           if (res.data.status) {
             setToken({

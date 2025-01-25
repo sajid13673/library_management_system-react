@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import BorrowingCard from "../../Components/Borrowing/BorrowingCard";
 import {
@@ -13,7 +12,9 @@ import Loading from "../../Components/Loading";
 import { useDispatch } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import { fetchMembers } from "../../Actions/memberActions";
+import useApi from "../../Hooks/useApi";
 function BorrowingList(props) {
+  const {fetchData} = useApi();
   const dispatch = useDispatch();
   const [borrowings, setBorrowings] = React.useState([]);
   const [totalPages, setTotalPages] = React.useState(1);
@@ -23,10 +24,10 @@ function BorrowingList(props) {
   const borrowingsArray = borrowings.data ? Array.from(borrowings.data) : [];
   async function getBorrowings() {
     setLoading(true);
-    await axios
-      .get(
-        `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}`
-      )
+    await fetchData({
+      method: "GET",
+      url: `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}`
+      })
       .then((res) => {
         if (res.data.status) {
           console.log(res.data.data);

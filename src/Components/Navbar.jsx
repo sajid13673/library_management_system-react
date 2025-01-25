@@ -13,10 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../Utils/authProvider';
 import { FormControlLabel, styled, Switch } from '@mui/material';
-
+import useApi from '../Hooks/useApi';
 const settings = ['profile', 'account', 'dashboard', 'logout'];
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -75,6 +74,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function Navbar(props) {
+  const { fetchData } = useApi();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
@@ -103,8 +103,7 @@ const navigateToPage = (page) => {
     setAnchorElUser(null);
   };
     async function handleLogout() {
-    await axios
-      .get("http://127.0.0.1:8000/api/logout")
+    await fetchData({method: "GET", url: "http://127.0.0.1:8000/api/logout"})
       .then((res) => {
         if (res.data.status) {
           setToken(null);

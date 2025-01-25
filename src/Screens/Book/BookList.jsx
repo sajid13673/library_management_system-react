@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BookCard from "../../Components/Book/BookCard";
-import axios from "axios";
 import {
   Box,
   Pagination,
@@ -13,8 +12,9 @@ import {
 import Loading from "../../Components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
-
+import useApi from "../../Hooks/useApi";
 export default function BookList(props) {
+  const {fetchData} = useApi();
   const dispatch = useDispatch();
   const booksData = useSelector((state) => state.books.books);
   console.log(booksData);
@@ -28,12 +28,11 @@ export default function BookList(props) {
     navigate("/edit-book", { state: { id: id } });
   }
   function handleBookDelete(id) {
-    axios
-      .delete("http://127.0.0.1:8000/api/book/" + id)
+    fetchData({ method: "DELETE", url: `http://127.0.0.1:8000/api/book/${id}` })
       .then((res) => {
         if (res.data.status) {
           console.log("book deleted");
-          dispatch(fetchBooks(1,9));
+          dispatch(fetchBooks(1, 9));
         }
       })
       .catch((err) => console.log(err));

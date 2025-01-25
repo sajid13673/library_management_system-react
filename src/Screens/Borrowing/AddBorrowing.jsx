@@ -8,11 +8,9 @@ import {
   Divider,
   FormControl,
   Grid,
-  styled,
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import moment from "moment";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
@@ -21,8 +19,9 @@ import Loading from "../../Components/Loading";
 import { useDispatch } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import { fetchMembers } from "../../Actions/memberActions";
-
+import useApi from "../../Hooks/useApi";
 function AddBorrowing() {
+  const {fetchData} = useApi();
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -53,8 +52,7 @@ function AddBorrowing() {
   const [loading, setLoading] = React.useState(false);
   async function getMembers() {
     setLoading(true);
-    await axios
-      .get("http://127.0.0.1:8000/api/member")
+    await fetchData({method: "GET", url: "http://127.0.0.1:8000/api/member"})
       .then((res) => {
         if (res.data.status) {
           setMembers(res.data.data);
@@ -65,8 +63,7 @@ function AddBorrowing() {
       .catch((err) => console.log(err));
   }
   async function getBookById() {
-    await axios
-      .get("http://127.0.0.1:8000/api/book/" + bookId)
+    await fetchData({method: "GET", url: `http://127.0.0.1:8000/api/book/${bookId}`})
       .then((res) => {
         if (res.data.status) {
           setBook(res.data.data);
@@ -80,12 +77,15 @@ function AddBorrowing() {
       Object.keys(book).map((key) => form.append(key, book[key]));
       form.append("_method", "put");
       form.set("status", 0);
-      await axios
-        .post("http://127.0.0.1:8000/api/borrowing", formData)
+      await fetchData({
+        method: "POST",
+        url: "http://127.0.0.1:8000/api/borrowing",
+        data: formData,
+      })
         .then((res) => {
           if (res.data.status) {
-            dispatch(fetchBooks)
-            dispatch(fetchMembers)
+            dispatch(fetchBooks);
+            dispatch(fetchMembers);
             navigate("/");
           }
         })
