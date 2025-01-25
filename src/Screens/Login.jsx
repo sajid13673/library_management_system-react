@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Utils/authProvider";
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -15,7 +16,7 @@ import {
 } from "@mui/material";
 import useApi from "../Hooks/useApi";
 export default function Login(props) {
-  const { fetchData } = useApi();
+  const { fetchData, error } = useApi();
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -55,7 +56,6 @@ export default function Login(props) {
             navigate("/");
           }
         })
-        .catch((err) => console.log(err));
     },
   });
   React.useEffect(() => {
@@ -75,8 +75,12 @@ export default function Login(props) {
       <form onSubmit={formik.handleSubmit}>
         <Card
           sx={{ display: "flex", flexDirection: "column", p: 3, gap: 3 }}
-          maxWidth="sm"
         >
+          {error &&
+            <Alert variant="filled" severity="error">
+              {error.response.data.message}
+            </Alert>
+          }
           <FormControl>
             <InputLabel htmlFor="my-input">Email address</InputLabel>
             <Input
