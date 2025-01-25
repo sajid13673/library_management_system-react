@@ -7,7 +7,6 @@ import AddBook from "../../Screens/Book/AddBook";
 import NavBar from "../Navbar";
 import MemberList from "../../Screens/Member/MemberList";
 import BookList from "../../Screens/Book/BookList";
-import axios from "axios";
 import EditBook from "../Book/EditBook";
 import EditMember from "../../Screens/Member/EditMember";
 import AddBorrowing from "../../Screens/Borrowing/AddBorrowing";
@@ -19,8 +18,9 @@ import { createTheme, Paper, ThemeProvider } from "@mui/material";
 import Home from "../../Screens/Home";
 import { useAuth } from "../../Utils/authProvider";
 import UserBorrowings from "../../Screens/Borrowing/UserBorrowings";
-
+import useApi from "../../Hooks/useApi";
 function App() {
+  const {fetchData} = useApi([]);
   const defaultImage =
     "https://firebasestorage.googleapis.com/v0/b/laravel-product-list-frontend.appspot.com/o/images%2Fno%20image.jpg?alt=media&token=cfaed1bd-c1f4-4566-8dca-25b05e101829";
   const [loading, setLoading] = React.useState(false);
@@ -65,8 +65,7 @@ function App() {
 
   function handleDeleteBorrowing(id) {
     return new Promise(function (resolve, reject) {
-      axios
-        .delete("http://127.0.0.1:8000/api/borrowing/" + id)
+      fetchData({method: "DELETE", url: `http://127.0.0.1:8000/api/borrowing/${id}`})
         .then((res) => {
           if (res.data.status) {
             console.log("borrowing deleted");
@@ -81,8 +80,11 @@ function App() {
     Object.keys(book).map((key) => form.append(key, book[key]));
     form.append("_method", "put");
     return new Promise((resolve, reject) => {
-      axios
-        .post("http://127.0.0.1:8000/api/borrowing/" + id, formData)
+      fetchData({
+        method: "POST",
+        url: `http://127.0.0.1:8000/api/borrowing/${id}`,
+        data: formData,
+      })
         .then((res) => {
           if (res.data.status) {
             resolve(true);
@@ -92,8 +94,7 @@ function App() {
     });
   }
   const getUser = async () => {
-    await axios
-     .get("http://127.0.0.1:8000/api/profile")
+    await fetchData({method: "GET", url: "http://127.0.0.1:8000/api/profile"})
      .then((res) => {
         console.log(res.data.data);
         setUser(res.data.data)
