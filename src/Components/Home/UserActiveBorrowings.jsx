@@ -33,7 +33,6 @@ function UserActiveBorrowings({ user }) {
     <Card sx={{ margin: 3 }}>
       <CardHeader 
         title="Active Borrowings" 
-        // sx={{ backgroundColor: "#1976d2", color: "#fff", textAlign: "center" }}
         sx={[
           (theme) => ({
             backgroundColor: theme.palette.primary.main,
@@ -51,7 +50,7 @@ function UserActiveBorrowings({ user }) {
           spacing={2}
           justifyContent="center"
         >
-          {user?.member?.borrowing.map((borrowing) => (
+          {user?.member?.activeBorrowings.map((borrowing) => (
             <Grid item xs={12} sm={6} key={borrowing.id}>
               <Card 
               sx={[

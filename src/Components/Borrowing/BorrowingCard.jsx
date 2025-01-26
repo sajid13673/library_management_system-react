@@ -183,7 +183,7 @@ function BorrowingCard(props) {
                       >
                         set return date
                       </Button>): (
-                        <Typography textTransform='uppercase' variant="body2" color='error'>not returned</Typography>
+                        <Typography fontWeight={600} textTransform='uppercase' variant="body2" color='error'>not returned</Typography>
                       )}
                     </Grid>
                   )}
