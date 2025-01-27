@@ -17,6 +17,7 @@ export default function BookList(props) {
   const {fetchData} = useApi();
   const dispatch = useDispatch();
   const booksData = useSelector((state) => state.books.books);
+  const loading = useSelector((state) => state.books.loading);
   console.log(booksData);
   
   const [page, setPage] = useState(1);
@@ -70,7 +71,7 @@ export default function BookList(props) {
           ))
         ) : (
           <Container className="keyMessage">
-            {!props.loading ? (
+            {!loading ? (
               <Typography variant="h3">Nothing to show</Typography>
             ) : (
               <Loading />

@@ -23,7 +23,6 @@ function App() {
   const {fetchData} = useApi([]);
   const defaultImage =
     "https://firebasestorage.googleapis.com/v0/b/laravel-product-list-frontend.appspot.com/o/images%2Fno%20image.jpg?alt=media&token=cfaed1bd-c1f4-4566-8dca-25b05e101829";
-  const [loading, setLoading] = React.useState(false);
   function validateEmail(str) {
     return !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(str);
   }
@@ -137,7 +136,6 @@ function App() {
                       />
                       <BookList
                         defaultImage={defaultImage}
-                        loading={loading}
                       />
                     </>
                   }
@@ -183,7 +181,6 @@ function App() {
                       />
                       <MemberList
                         defaultImage={defaultImage}
-                        loading={loading}
                       />
                     </>
                   }

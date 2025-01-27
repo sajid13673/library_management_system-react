@@ -19,6 +19,7 @@ export default function MemberList(props) {
   const { fetchData } = useApi();
   const dispatch = useDispatch();
   const membersData = useSelector((state) => state.members.members);
+  const loading = useSelector((state) => state.members.loading);
   console.log(membersData);
   const [page, setPage] = useState(1)
   const totalPages = membersData && membersData.data ? membersData.data.last_page : [];
@@ -80,7 +81,7 @@ export default function MemberList(props) {
           ))
         ) : (
           <Container className="keyMessage">
-            {!props.loading ? (
+            {!loading ? (
               <Typography variant="h3">Nothing to show</Typography>
             ) : (
               <Loading />
@@ -88,7 +89,7 @@ export default function MemberList(props) {
           </Container>
         )}
       </Grid>
-      {data.length > 0 && !props.loading && (
+      {data.length > 0 && !loading && (
         <Stack spacing={2} sx={{ mt: "auto" }}>
           <Pagination
             count={totalPages}
