@@ -99,7 +99,7 @@ function AddBorrowing() {
     getBookById();
     console.log(members);
     const date = moment().format("YYYY-MM-DDTHH:mm:ss");
-    const dueDate = moment(date).add(5, "days").format("YYYY/MM/DD HH:mm:ss");
+    const dueDate = moment(date).add(5, "days").format("YYYY-MM-DD HH:mm:ss");
     setFormData((prevFormData) => {
       return { ...prevFormData, due_date: dueDate };
     });
