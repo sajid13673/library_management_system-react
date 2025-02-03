@@ -19,6 +19,7 @@ import Home from "../../Screens/Home";
 import { useAuth } from "../../Utils/authProvider";
 import UserBorrowings from "../../Screens/Borrowing/UserBorrowings";
 import useApi from "../../Hooks/useApi";
+import FineList from "../../Screens/FineList";
 function App() {
   const {fetchData} = useApi([]);
   const defaultImage =
@@ -276,6 +277,18 @@ function App() {
                         validateEmail={(str) => validateEmail(str)}
                         validateOnlyNumbers={(str) => validateOnlyNumbers(str)}
                       />
+                    </>
+                  }
+                />
+                <Route
+                  path="/fine-list"
+                  element={
+                    <>
+                      <NavBar
+                        darkMode={darkMode}
+                        setDarkMode={(bool) => setDarkMode(bool)}
+                      />
+                      <FineList />
                     </>
                   }
                 />
