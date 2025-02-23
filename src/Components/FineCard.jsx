@@ -1,7 +1,7 @@
 import { Button, Card, CardActions, CardContent, Grid, Typography, Box } from '@mui/material';
 import React from 'react';
 
-function FineCard({ memberName, amount, days, isPaid }) {
+function FineCard({ memberName, amount, days, isPaid, openProcessPayment, borrowingStatus}) {
   return (
     <Grid item xs={12} sm={12} md={6} lg={4}>
       <Card sx={{ minWidth: 275 }}>
@@ -26,7 +26,15 @@ function FineCard({ memberName, amount, days, isPaid }) {
           </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: 'center' }}>
-          {!isPaid && <Button variant="contained" color="primary">Pay Now</Button>}
+          {!isPaid && 
+          <Button
+          disabled={borrowingStatus}
+          variant="contained"
+          color="primary"
+          onClick={() => openProcessPayment()}
+        >
+          {borrowingStatus ? "not returned" : "process payment"}
+        </Button>}
         </CardActions>
       </Card>
     </Grid>
