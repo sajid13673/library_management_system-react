@@ -80,7 +80,7 @@ function Navbar(props) {
   const navigate = useNavigate();
   const { setToken, token } = useAuth();
 
-const pages = token.role == "admin" ? ["book list", "member list", "add book", "borrowing list"] : ["book list", "my borrowings"];
+const pages = token.role == "admin" ? ["book list", "member list", "add book", "borrowing list", "fine list"] : ["book list", "my borrowings"];
 const navigateToPage = (page) => {
       navigate("/" + page.split(" ").join("-"));
   };
