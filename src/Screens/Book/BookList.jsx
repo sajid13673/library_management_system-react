@@ -21,6 +21,7 @@ export default function BookList(props) {
   console.log(booksData);
   
   const [page, setPage] = useState(1);
+  const perPage = 12;
   const totalPages = booksData && booksData.data ? booksData.data.last_page : 1;
   const data = Array.from(booksData && booksData.data ? booksData.data.data : []);
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function BookList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("book deleted");
-          dispatch(fetchBooks(1, 9));
+          dispatch(fetchBooks(page, perPage));
         }
       })
       .catch((err) => console.log(err));
@@ -46,7 +47,7 @@ export default function BookList(props) {
   }
   React.useEffect(() => {
     console.log("get Book");
-    dispatch(fetchBooks(page,9));
+    dispatch(fetchBooks(page, perPage));
   }, [page]);
   return (
     <Box p={3} flex={1} display="flex" flexDirection="column" gap={2}>

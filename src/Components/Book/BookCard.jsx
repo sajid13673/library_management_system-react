@@ -1,7 +1,7 @@
 import React from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import EditIcon from "@mui/icons-material/Edit";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 import BlockIcon from "@mui/icons-material/Block";
 import {
   Button,
@@ -19,7 +19,7 @@ export default function BookCard(props) {
   const { token } = useAuth();
 
   return (
-    <Grid item xs={12} sm={12} md={6} lg={4}>
+    <Grid item xs={12} sm={6} md={4} lg={3}>
       <Card
         sx={[
           {
@@ -30,7 +30,7 @@ export default function BookCard(props) {
             flexDirection: "column",
             justifyContent: "space-between",
             overflow: "hidden",
-              boxShadow: '1px 4px 6px rgba(0, 0, 0, 0.41)',
+            boxShadow: "1px 4px 6px rgba(0, 0, 0, 0.41)",
             borderRadius: 2,
             backgroundColor: "#daebff",
           },
@@ -55,7 +55,8 @@ export default function BookCard(props) {
             },
             (theme) =>
               theme.applyStyles("dark", {
-                background: "linear-gradient(45deg, rgba(50,49,50,1) 43%, rgb(73, 70, 70) 84%)",
+                background:
+                  "linear-gradient(45deg, rgba(50,49,50,1) 43%, rgb(73, 70, 70) 84%)",
               }),
           ]}
         >
@@ -65,7 +66,7 @@ export default function BookCard(props) {
               maxWidth: 100,
               borderRadius: 1.7,
               mb: 1,
-              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.41)'
+              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.41)",
             }}
             src={props.path !== null ? props.path : props.defaultImage}
             alt="productImage"
@@ -79,7 +80,9 @@ export default function BookCard(props) {
           <Typography variant="body2" color="textSecondary">
             {props.publisher}
           </Typography>
-          <Typography variant="body2" color="textSecondary">{props.year}</Typography>
+          <Typography variant="body2" color="textSecondary">
+            {props.year}
+          </Typography>
         </CardContent>
         <CardActions sx={{ justifyContent: "center" }}>
           {token.role === "admin" && (
@@ -128,8 +131,8 @@ export default function BookCard(props) {
                 variant="contained"
                 color="primary"
               >
-                Add Borrowing
-                <AddCircleIcon sx={{ ml: 1 }} />
+                Borrow
+                <EventNoteIcon sx={{ ml: 1 }} />
               </Button>
             ) : (
               <Button size="small" variant="contained" color="primary">
