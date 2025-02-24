@@ -11,55 +11,91 @@ import {
   Grid,
   Typography,
   Tooltip,
+  Box,
 } from "@mui/material";
 import { useAuth } from "../../Utils/authProvider";
 
 export default function BookCard(props) {
   const { token } = useAuth();
+
   return (
     <Grid item xs={12} sm={12} md={6} lg={4}>
-      <Card sx={{ minWidth: 200 }}>
-        <CardContent
-          sx={{
+      <Card
+        sx={[
+          {
+            minWidth: 200,
+            boxShadow: 24,
+            height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+            justifyContent: "space-between",
+            overflow: "hidden",
+              boxShadow: '1px 4px 6px rgba(0, 0, 0, 0.41)',
+            borderRadius: 2,
+            backgroundColor: "#daebff",
+          },
+          (theme) =>
+            theme.applyStyles("dark", {
+              backgroundColor: "#3d3c3d",
+            }),
+        ]}
+      >
+        <CardContent
+          sx={[
+            {
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: 0.95,
+              flex: 1,
+              borderRadius: 2,
+              background:
+                "linear-gradient(45deg, rgb(122, 189, 255) 43%, rgb(199, 227, 255) 84%)",
+            },
+            (theme) =>
+              theme.applyStyles("dark", {
+                background: "linear-gradient(45deg, rgba(50,49,50,1) 43%, rgb(73, 70, 70) 84%)",
+              }),
+          ]}
         >
-          <img
-            style={{ maxWidth: "100px" }}
+          <Box
+            component="img"
+            sx={{
+              maxWidth: 100,
+              borderRadius: 1.7,
+              mb: 1,
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.41)'
+            }}
             src={props.path !== null ? props.path : props.defaultImage}
             alt="productImage"
           />
-          <Typography variant="h5" component="div">
+          <Typography variant="h6" component="div">
             {props.title}
           </Typography>
-          <Typography sx={{ fontSize: 14 }} color="textSecondary" gutterBottom>
+          <Typography color="textSecondary" gutterBottom>
             {props.author}
           </Typography>
-          <Typography sx={{ mb: 1.5 }} color="textSecondary">
+          <Typography variant="body2" color="textSecondary">
             {props.publisher}
           </Typography>
-          <Typography variant="body2">{props.year}</Typography>
+          <Typography variant="body2" color="textSecondary">{props.year}</Typography>
         </CardContent>
-        <CardActions style={{ justifyContent: "center" }}>
+        <CardActions sx={{ justifyContent: "center" }}>
           {token.role === "admin" && (
             <>
               <Tooltip title="Edit" placement="top-start">
-                <div>
-                  <Button
-                    onClick={() => props.handleBookEdit(props.id)}
-                    size="small"
-                    variant="contained"
-                    style={{
-                      backgroundColor: "rgb(0, 172, 14)",
-                      color: "white",
-                    }}
-                  >
-                    <EditIcon />
-                  </Button>
-                </div>
+                <Button
+                  onClick={() => props.handleBookEdit(props.id)}
+                  size="small"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "rgb(0, 172, 14)",
+                    color: "white",
+                  }}
+                >
+                  <EditIcon />
+                </Button>
               </Tooltip>
               <Tooltip
                 title={
@@ -67,53 +103,45 @@ export default function BookCard(props) {
                 }
                 placement="top-start"
               >
-                <>
-                  <Button
-                    disabled={props.activeBorrowings}
-                    size="small"
-                    onClick={() => props.handleBookDelete(props.id)}
-                    variant="contained"
-                    color="secondary"
-                    style={{
-                      background: props.activeBorrowings
-                        ? "#FFC0C0"
-                        : "#E71919",
-                    }}
-                  >
-                    <DeleteForeverIcon />
-                  </Button>
-                </>
+                <Button
+                  disabled={props.activeBorrowings}
+                  size="small"
+                  onClick={() => props.handleBookDelete(props.id)}
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    backgroundColor: props.activeBorrowings
+                      ? "#FFC0C0"
+                      : "#E71919",
+                  }}
+                >
+                  <DeleteForeverIcon />
+                </Button>
               </Tooltip>
             </>
           )}
           {!props.activeBorrowings ? (
-                token.role === "admin" ? <Button
-                  onClick={() => props.handleAddBrowing(props.id)}
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                >
-                  Add Borrowing
-                  <AddCircleIcon style={{ marginLeft: "5px" }} />
-                </Button> : 
-                <Button
+            token.role === "admin" ? (
+              <Button
+                onClick={() => props.handleAddBrowing(props.id)}
                 size="small"
                 variant="contained"
                 color="primary"
               >
+                Add Borrowing
+                <AddCircleIcon sx={{ ml: 1 }} />
+              </Button>
+            ) : (
+              <Button size="small" variant="contained" color="primary">
                 Available
               </Button>
-              ) : (
-                <Button
-                  disabled
-                  size="small"
-                  variant="contained"
-                  color="primary"
-                >
-                  Not Available
-                  <BlockIcon style={{ marginLeft: "5px" }} />
-                </Button>
-              )}
+            )
+          ) : (
+            <Button disabled size="small" variant="contained" color="primary">
+              Not Available
+              <BlockIcon sx={{ ml: 1 }} />
+            </Button>
+          )}
         </CardActions>
       </Card>
     </Grid>
