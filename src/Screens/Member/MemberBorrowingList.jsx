@@ -1,30 +1,41 @@
-import { Container, Grid, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BorrowingCard from "../../Components/Borrowing/BorrowingCard";
 import { useLocation } from "react-router-dom";
-import { Box, Pagination, Stack } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Pagination,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Loading from "../../Components/Loading";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import { fetchMembers } from "../../Actions/memberActions";
 import useApi from "../../Hooks/useApi";
-function MemberBorrowingList(props) {
+import { confirmReturn, deleteBorrowing } from "../../Actions/borrowingActions";
+function MemberBorrowingList() {
   const { fetchData } = useApi();
   const dispatch = useDispatch();
   const location = useLocation();
   const memberId = location.state.memberId;
-  const [member, setMember] = React.useState([]);
-  const [totalPages, setTotalPages] = React.useState(1);
-  const [borrowingPage, setBorrowingPage] = React.useState(1);
-  const [borrowingsPerPage, setBorrowingsPerPage] = React.useState(10);
-  const [loading, setLoading] = React.useState(false);
+  const deleteSuccess = useSelector((state) => state.borrowing.deleteSuccess);
+  const deleteError = useSelector((state) => state.borrowing.deleteError);
+  const returnSuccess = useSelector((state) => state.borrowing.returnSuccess);
+  const returnError = useSelector((state) => state.borrowing.returnError);
+  const [member, setMember] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [borrowingPage, setBorrowingPage] = useState(1);
+  const [borrowingsPerPage, setBorrowingsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
   const borrwings = member.borrowing ? Array.from(member.borrowing.data) : [];
   async function getMemberWithBorrowings() {
     setLoading(true);
     await fetchData({
       method: "GET",
-      url: `http://127.0.0.1:8000/api/member/${memberId}?borrowing=1&page=${borrowingPage}&per_page=${borrowingsPerPage}`
-      })
+      url: `http://127.0.0.1:8000/api/member/${memberId}?borrowing=1&page=${borrowingPage}&per_page=${borrowingsPerPage}`,
+    })
       .then((res) => {
         if (res.data.status) {
           setLoading(false);
@@ -34,31 +45,38 @@ function MemberBorrowingList(props) {
       })
       .catch((err) => console.log(err));
   }
-  async function handleConfirmReturn(id, formData, book) {
-    await props.handleConfirmReturn(id, formData, book).then((res) => {
-      if (res) {
-        dispatch(fetchBooks())
-        dispatch(fetchMembers())
-        getMemberWithBorrowings();
-      }
-    });
+  async function handleConfirmReturn(id, formData) {
+    dispatch(confirmReturn(id, formData));
   }
   function handleChange(e, value) {
     setBorrowingPage(value);
   }
   async function handleDelete(id) {
-    await props
-      .handleDeleteBorrowing(id)
-      .then((res) => {
-        res && getMemberWithBorrowings();
-      })
-      .catch((err) => console.log(err));
+    dispatch(deleteBorrowing(id));
   }
 
-  const [currentId, setCurrentId] = React.useState();
-  React.useEffect(() => {
+  const [currentId, setCurrentId] = useState();
+  useEffect(() => {
     getMemberWithBorrowings();
   }, [borrowingPage]);
+  useEffect(() => {
+    if (deleteSuccess) {
+      getMemberWithBorrowings();
+    }
+    if (deleteError) {
+      console.log(deleteError);
+    }
+  }, [deleteSuccess, deleteError]);
+  useEffect(() => {
+    if (returnSuccess) {
+      dispatch(fetchBooks());
+      dispatch(fetchMembers());
+      getMemberWithBorrowings();
+    }
+    if (returnError) {
+      console.log(returnError);
+    }
+  }, [returnSuccess, returnError]);
   return (
     <Box display="flex" flexDirection="column" flex={1} p={2} gap={2}>
       <Grid container xs={12} spacing={2}>

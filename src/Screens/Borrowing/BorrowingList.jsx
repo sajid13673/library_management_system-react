@@ -1,33 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BorrowingCard from "../../Components/Borrowing/BorrowingCard";
-import {
-  Pagination,
-  Stack,
-  Container,
-  Grid,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Pagination, Stack, Grid, Typography, Box } from "@mui/material";
 import Loading from "../../Components/Loading";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import { fetchMembers } from "../../Actions/memberActions";
+import { deleteBorrowing, confirmReturn } from "../../Actions/borrowingActions";
 import useApi from "../../Hooks/useApi";
 function BorrowingList(props) {
-  const {fetchData} = useApi();
+  const { fetchData } = useApi();
   const dispatch = useDispatch();
-  const [borrowings, setBorrowings] = React.useState([]);
-  const [totalPages, setTotalPages] = React.useState(1);
-  const [borrowingPage, setBorrowingPage] = React.useState(1);
-  const [borrowingsPerPage, setBorrowingsPerPage] = React.useState(10);
-  const [loading, setLoading] = React.useState(false);
+  const deleteSuccess = useSelector((state) => state.borrowing.deleteSuccess);
+  const deleteError = useSelector((state) => state.borrowing.deleteError);
+  const returnSuccess = useSelector((state) => state.borrowing.returnSuccess);
+  const returnError = useSelector((state) => state.borrowing.returnError);
+  const [borrowings, setBorrowings] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [borrowingPage, setBorrowingPage] = useState(1);
+  const [borrowingsPerPage, setBorrowingsPerPage] = useState(10);
+  const [loading, setLoading] = useState(false);
   const borrowingsArray = borrowings.data ? Array.from(borrowings.data) : [];
   async function getBorrowings() {
     setLoading(true);
     await fetchData({
       method: "GET",
-      url: `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}`
-      })
+      url: `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}`,
+    })
       .then((res) => {
         if (res.data.status) {
           console.log(res.data.data);
@@ -39,29 +37,39 @@ function BorrowingList(props) {
       .catch((err) => console.log(err));
   }
   async function handleConfirmReturn(id, formData, book) {
-    await props.handleConfirmReturn(id, formData, book).then((res) => {
-      if (res) {
-        dispatch(fetchBooks())
-        dispatch(fetchMembers())
-        getBorrowings();
-      }
-    });
+    dispatch(confirmReturn(id, formData, book));
   }
   function handleChange(e, value) {
     setBorrowingPage(value);
   }
   async function handleDelete(id) {
-    await props.handleDeleteBorrowing(id).then((res) => {
-      if (res) {
-        getBorrowings();
-      }
-    });
+    dispatch(deleteBorrowing(id));
   }
-
-  const [currentId, setCurrentId] = React.useState();
-  React.useEffect(() => {
+  const [currentId, setCurrentId] = useState();
+  useEffect(() => {
     getBorrowings();
   }, [borrowingPage]);
+  useEffect(() => {
+    if (deleteSuccess) {
+      getBorrowings();
+    }
+    if (deleteError) {
+      console.log(deleteError);
+    }
+  }, [deleteSuccess, deleteError]);
+  useEffect(() => {
+    console.log("return success : " + returnSuccess);
+
+    if (returnSuccess) {
+      dispatch(fetchBooks());
+      dispatch(fetchMembers());
+      getBorrowings();
+    }
+    if (returnError) {
+      console.log(returnError);
+    }
+  }, [returnSuccess, returnError]);
+
   return (
     <Box display="flex" flexDirection="column" p={3} flex={1} gap={2}>
       <Grid container xs={12} spacing={2}>
