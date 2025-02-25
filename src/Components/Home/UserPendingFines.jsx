@@ -4,39 +4,36 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Typography,
-  Divider,
   Grid,
+  Typography,
 } from "@mui/material";
-import moment from "moment";
 import BookIcon from "@mui/icons-material/Book";
 
-function UserActiveBorrowings({ user }) {
-  console.log(user?.member?.borrowings);
-
+function UserPendingFines({ fines }) {
   return (
     <Card
       sx={[
-        { height: "100%" },
+        { boxShadow: 3, height: "100%" },
         (theme) =>
           theme.applyStyles("dark", {
-            boxShadow: "0px 2px 5px rgba(61, 166, 236, 0.5)",
+            boxShadow: "0px 2px 5px rgba(238, 96, 68, 0.5)",
           }),
       ]}
     >
       <CardHeader
-        title="Active Borrowings"
+        title="pending fines"
         sx={[
-          {
+          (theme) => ({
             height: "1rem",
             background:
-              "linear-gradient(45deg, rgba(25,118,220,1) 0%, rgba(23,210,252,1) 100%)",
+              "linear-gradient(45deg, rgba(255,30,17,1) 4%, rgba(255,140,54,1) 45%)",
             color: "#fff",
-          },
+            padding: theme.spacing(2),
+          }),
           (theme) =>
             theme.applyStyles("dark", {
               background:
-                "linear-gradient(45deg, rgba(8,75,148,1) 0%, rgba(17,153,184,1) 100%)",
+                "linear-gradient(45deg, rgba(152,43,43,1) 18%, rgba(196,108,42,1) 51%)",
             }),
         ]}
       />
@@ -53,22 +50,18 @@ function UserActiveBorrowings({ user }) {
             "-ms-overflow-style": "none",
             "scrollbar-width": "none",
           }}
-          justifyContent="center"
         >
-          {user?.member?.activeBorrowings?.length > 0 ? (
-            user?.member?.activeBorrowings.map((borrowing) => (
-              <Grid item xs={12} key={borrowing.id}>
+          {fines?.length > 0 ? (
+            fines.map((fine) => (
+              <Grid item xs={12} key={fine.id}>
                 <Card
                   sx={[
                     {
-                      height: "100%",
-                    },
-                    {
-                      backgroundColor: "#C7E3FF",
+                      backgroundColor: "#ffd7d7",
                     },
                     (theme) =>
                       theme.applyStyles("dark", {
-                        backgroundColor: "rgb(23, 70, 117)",
+                        background: "#5f1111",
                       }),
                   ]}
                   variant="filled"
@@ -86,49 +79,36 @@ function UserActiveBorrowings({ user }) {
                         sx={(theme) => ({
                           color: theme.palette.primary.main,
                           fontWeight: "bold",
-                          textTransform: "capitalize",
                         })}
                       >
-                        {borrowing.book.title}
+                        {fine.borrowing?.book?.title}
                       </Typography>
-                      <Typography variant="body2" color="textSecondary" noWrap>
-                        by{" "}
-                        <Typography component="span" textTransform="capitalize">
-                          {borrowing.book.author}
-                        </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        by {fine.borrowing?.book?.author}
                       </Typography>
                     </Box>
 
-                    <Divider />
-                    <Box display="flex" flexDirection="column" mt={2}>
-                      <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        gap={0.5}
-                        mb={1}
+                    <Box sx={{ textAlign: "center", mt: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Total Amount
+                      </Typography>
+                      <Typography
+                        variant="h5"
+                        component="div"
+                        color="error"
+                        sx={[
+                          { fontWeight: "bold" },
+                          (theme) =>
+                            theme.applyStyles("dark", {
+                              color: theme.palette.error.main,
+                            }),
+                        ]}
                       >
-                        <Typography variant="body2">
-                          Borrowed Date :{" "}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {moment(borrowing.created_at).format(
-                            "DD/MM/YYYY HH:mm"
-                          )}
-                        </Typography>
-                      </Box>
-                      <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        gap={0.5}
-                        mb={1}
-                      >
-                        <Typography variant="body2">Due Date :</Typography>
-                        <Typography variant="body2" color="error">
-                          {moment(borrowing.due_date).format(
-                            "DD/MM/YYYY HH:mm"
-                          )}
-                        </Typography>
-                      </Box>
+                        ${fine.amount}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        for {fine.days} {fine.days === 1 ? "day" : "days"}
+                      </Typography>
                     </Box>
                   </CardContent>
                 </Card>
@@ -140,7 +120,7 @@ function UserActiveBorrowings({ user }) {
                 sx={[
                   (theme) => ({
                     backgroundColor: "#f0f0f0",
-                    padding: 3,
+                    padding: theme.spacing(3),
                     borderRadius: 1,
                     display: "flex",
                     justifyContent: "center",
@@ -150,7 +130,7 @@ function UserActiveBorrowings({ user }) {
                   }),
                   (theme) =>
                     theme.applyStyles("dark", {
-                      backgroundColor: "rgb(23, 70, 117)",
+                      backgroundColor: "rgb(40, 40, 40)",
                       color: "#fff",
                     }),
                 ]}
@@ -178,4 +158,4 @@ function UserActiveBorrowings({ user }) {
   );
 }
 
-export default UserActiveBorrowings;
+export default UserPendingFines;
