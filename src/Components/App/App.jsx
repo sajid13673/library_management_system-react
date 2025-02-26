@@ -20,6 +20,7 @@ import { useAuth } from "../../Utils/authProvider";
 import UserBorrowings from "../../Screens/Borrowing/UserBorrowings";
 import useApi from "../../Hooks/useApi";
 import FineList from "../../Screens/FineList";
+import Settings from "../../Screens/Settings";
 function App() {
   const { fetchData: fetchUser, error: userError, data: userData } = useApi([]);
   const defaultImage =
@@ -93,6 +94,7 @@ function App() {
       >
         <BrowserRouter>
           <Routes>
+            {/* common protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route
                 path="/"
@@ -118,7 +120,22 @@ function App() {
                   </>
                 }
               />
+              <Route
+                path="/settings"
+                element={
+                  <>
+                  <NavBar
+                    darkMode={darkMode}
+                    setDarkMode={(bool) => setDarkMode(bool)}
+                  />
+                  <Settings
+                    user={user}
+                  />
+                  </>
+                }
+                />
             </Route>
+            {/* user protected routes */}
             <Route element={<ProtectedRoute roles={["user"]} />}>
               <Route
                 path="my-borrowings"
@@ -133,6 +150,7 @@ function App() {
                 }
               />
             </Route>
+            {/* admin protected routes */}
             <Route element={<ProtectedRoute roles={["admin"]} />}>
               <Route
                 path="/add-book"

@@ -7,7 +7,7 @@ import { fetchBooks } from "../../Actions/bookActions";
 import { fetchMembers } from "../../Actions/memberActions";
 import { deleteBorrowing, confirmReturn } from "../../Actions/borrowingActions";
 import useApi from "../../Hooks/useApi";
-function BorrowingList(props) {
+function BorrowingList() {
   const { fetchData } = useApi();
   const dispatch = useDispatch();
   const deleteSuccess = useSelector((state) => state.borrowing.deleteSuccess);
