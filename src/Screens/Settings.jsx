@@ -20,6 +20,8 @@ export default function Settings({ user, userLoading, userError }) {
     message: "",
     type: "success",
   });
+  const [name, setName] = useState(user?.member?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
   const initialValuesAccount = {
     current_password: "",
     new_password: "",
@@ -35,8 +37,9 @@ export default function Settings({ user, userLoading, userError }) {
       errors.new_password = "Required";
     }
     if (values.new_password === values.current_password) {
-        errors.new_password = "New password cannot be the same as current password";
-      }
+      errors.new_password =
+        "New password cannot be the same as current password";
+    }
     if (!values.confirm_password) {
       errors.confirm_password = "Required";
     } else if (values.new_password !== values.confirm_password) {
@@ -44,14 +47,15 @@ export default function Settings({ user, userLoading, userError }) {
     }
     return errors;
   };
+
   const CustomErrorMessage = ({ children }) => (
     <Typography variant="body2" color="error">
       {children}
     </Typography>
   );
+
   useEffect(() => {
     if (data.status) {
-      setPasswordAlert(true);
       setPasswordAlert({
         status: true,
         message: "Password changed successfully!",
@@ -69,11 +73,16 @@ export default function Settings({ user, userLoading, userError }) {
             : error.response.data.message,
         type: "error",
       });
-
       console.log(error);
       console.log(error.message);
     }
   }, [data, error]);
+  useEffect(() => {
+    if (user) {
+      setName(user.member?.name || "");
+      setEmail(user.email || "");
+    }
+  }, [user]);
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
@@ -85,7 +94,7 @@ export default function Settings({ user, userLoading, userError }) {
         <Typography variant="h6" gutterBottom>
           Profile Settings
         </Typography>
-        {!userLoading && !userError ? (
+        {!userLoading && !userError && user ? (
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -93,7 +102,7 @@ export default function Settings({ user, userLoading, userError }) {
                 label="Name"
                 fullWidth
                 variant="outlined"
-                defaultValue={user?.member?.name}
+                value={name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -102,20 +111,19 @@ export default function Settings({ user, userLoading, userError }) {
                 label="Email"
                 fullWidth
                 variant="outlined"
-                defaultValue={user.email}
+                value={email}
               />
             </Grid>
           </Grid>
         ) : (
           <Box display={"flex"}>
-            {" "}
             {userLoading ? (
               <CircularProgress sx={{ my: 1, mx: "auto" }} />
             ) : (
               <Typography textTransform="uppercase" color="error" mx="auto">
-                something went wrong
+                Something went wrong
               </Typography>
-            )}{" "}
+            )}
           </Box>
         )}
       </Box>
@@ -197,7 +205,7 @@ export default function Settings({ user, userLoading, userError }) {
                       variant="contained"
                       color="primary"
                     >
-                      {loading ? "updating" : "Update Password"}
+                      {loading ? "Updating" : "Update Password"}
                     </Button>
                   </Grid>
                 </Grid>
