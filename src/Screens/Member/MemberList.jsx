@@ -18,6 +18,7 @@ import useApi from "../../Hooks/useApi";
 export default function MemberList(props) {
   const { fetchData } = useApi();
   const dispatch = useDispatch();
+  const perPage = 12;
   const membersData = useSelector((state) => state.members.members);
   const loading = useSelector((state) => state.members.loading);
   console.log(membersData);
@@ -39,7 +40,7 @@ export default function MemberList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("member deleted");
-          dispatch(fetchMembers(page, 9));
+          dispatch(fetchMembers(page, perPage));
         }
       })
       .catch((err) => console.log(err));
@@ -48,7 +49,7 @@ export default function MemberList(props) {
     setPage(value);
   }
   useEffect(()=> {
-    dispatch(fetchMembers(page,9))
+    dispatch(fetchMembers(page, perPage))
   },[page])
   return (
     <Box flex={1} display="flex" flexDirection="column" p={2} gap={2}>

@@ -90,7 +90,7 @@ export default function BookForm(props) {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Card
-        sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}
+        sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2, boxShadow: 5 }}
         className="input-form"
         maxWidth="sm"
       >

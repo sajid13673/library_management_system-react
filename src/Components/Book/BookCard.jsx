@@ -24,13 +24,12 @@ export default function BookCard(props) {
         sx={[
           {
             minWidth: 200,
-            boxShadow: 24,
             height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             overflow: "hidden",
-            boxShadow: "1px 4px 6px rgba(0, 0, 0, 0.41)",
+            boxShadow: 5,
             borderRadius: 2,
             backgroundColor: "#daebff",
           },
@@ -56,7 +55,7 @@ export default function BookCard(props) {
             (theme) =>
               theme.applyStyles("dark", {
                 background:
-                  "linear-gradient(45deg, rgba(50,49,50,1) 43%, rgb(73, 70, 70) 84%)",
+                  "linear-gradient(45deg, rgba(50,49,50,1) 43%, rgb(71, 70, 70) 84%)",
               }),
           ]}
         >
