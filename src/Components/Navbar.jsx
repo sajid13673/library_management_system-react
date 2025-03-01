@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Utils/authProvider';
 import { FormControlLabel, styled, Switch } from '@mui/material';
 import useApi from '../Hooks/useApi';
-const settings = ['profile', 'account', 'dashboard', 'logout'];
+const settings = ['settings', 'logout'];
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
   height: 34,
@@ -97,9 +97,19 @@ const navigateToPage = (page) => {
       navigateToPage(page);
     }
   };
-  const handleCloseUserMenu = (setting) => {
-    console.log(setting);
-    setting === "logout" && handleLogout();
+  const handleCloseUserMenu = (item) => {
+    switch (item) {
+      case "logout":
+        handleCloseUserMenu();
+        handleLogout();
+        break;
+      case "settings":
+        handleCloseUserMenu();
+        navigate("/settings");
+        break;
+      default:
+        break;
+    }
     setAnchorElUser(null);
   };
     async function handleLogout() {
