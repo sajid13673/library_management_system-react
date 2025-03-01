@@ -60,6 +60,16 @@ function App() {
           },
         },
       },
+      MuiCard: {
+        defaultProps: {
+          style: {
+            background:
+              darkMode &&
+              "linear-gradient(45deg, rgb(35, 35, 35) 48%, rgba(46, 46, 46, 0.78) 95%)",
+              boxShadow: "2px 5px 8px rgba(0, 0, 0, 0.41),  -0px -2px rgba(0, 0, 0, 0.07)",
+          },
+        },
+      },
     },
   });
   const { token } = useAuth();

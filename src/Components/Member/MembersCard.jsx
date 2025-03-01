@@ -17,17 +17,12 @@ export default function MembersCard(props) {
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Card
-        sx={[{
+        sx={{
           height: "100%",
           minWidth: 275,
-          boxShadow: 5,
           display: 'flex',
           flexDirection: "column",
-        },
-      (theme) => theme.applyStyles('dark', {
-        background: 'linear-gradient(45deg, rgb(44, 43, 44) 48%, rgb(53, 52, 52) 95%)'
-      })]}
-        style={{ width: "200" }}
+        }}
       >
         <CardContent sx={{ display: 'flex', justifyContent: 'center', flex:1 }}>
           <>

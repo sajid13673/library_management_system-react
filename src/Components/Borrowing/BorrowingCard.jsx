@@ -78,7 +78,7 @@ function BorrowingCard(props) {
   }, [formData]);
   return (
     <Grid item xs={12} md={6}>
-      <Card sx={{ height: "100%", maxHeight: "25rem", boxShadow: 5 }}>
+      <Card sx={{ height: "100%", maxHeight: "25rem"}}>
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
             {props.member}

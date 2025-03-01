@@ -4,7 +4,7 @@ import React from 'react';
 function FineCard({ memberName, amount, days, isPaid, openProcessPayment, borrowingStatus}) {
   return (
     <Grid item xs={12} sm={12} md={6} lg={4}>
-      <Card sx={{ minWidth: 275, height: '100%', boxShadow: 5}}>
+      <Card sx={{ minWidth: 275, height: '100%' }}>
         <CardContent>
           <Typography variant="h6" component="div">{memberName}</Typography>
           <Box sx={{ mt: 2, mb: 2, textAlign: 'center' }}>

@@ -29,7 +29,6 @@ export default function BookCard(props) {
             flexDirection: "column",
             justifyContent: "space-between",
             overflow: "hidden",
-            boxShadow: 5,
             borderRadius: 2,
             backgroundColor: "#daebff",
           },
@@ -140,7 +139,7 @@ export default function BookCard(props) {
             )
           ) : (
             <Button disabled size="small" variant="contained" color="primary">
-              Not Available
+              unavailable
               <BlockIcon sx={{ ml: 1 }} />
             </Button>
           )}
