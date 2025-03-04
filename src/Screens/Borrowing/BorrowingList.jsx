@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BorrowingCard from "../../Components/Borrowing/BorrowingCard";
-import { Pagination, Stack, Grid, Typography, Box } from "@mui/material";
+import { Pagination, Stack, Grid, Typography, Box, FormControl, InputLabel, NativeSelect } from "@mui/material";
 import Loading from "../../Components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
@@ -19,6 +19,7 @@ function BorrowingList() {
   const [borrowingPage, setBorrowingPage] = useState(1);
   const [borrowingsPerPage, setBorrowingsPerPage] = useState(10);
   const [loading, setLoading] = useState(false);
+  const [type, setType] = useState("all");
   const borrowingsArray = borrowings.data ? Array.from(borrowings.data) : [];
   async function getBorrowings() {
     setLoading(true);
@@ -45,6 +46,9 @@ function BorrowingList() {
   async function handleDelete(id) {
     dispatch(deleteBorrowing(id));
   }
+  const handleTypeChange = (event) => {
+    setType(event.target.value);
+  };
   const [currentId, setCurrentId] = useState();
   useEffect(() => {
     getBorrowings();
@@ -72,6 +76,22 @@ function BorrowingList() {
 
   return (
     <Box display="flex" flexDirection="column" p={3} flex={1} gap={2}>
+      <FormControl sx={{ ml: "auto", mr: 5 }}>
+        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+          Filter
+        </InputLabel>
+        <NativeSelect
+          inputProps={{
+            name: "filter",
+            id: "uncontrolled-native",
+          }}
+          onChange={handleTypeChange}
+        >
+          <option value={"all"}>All</option>
+          <option value={"active"}>Active</option>
+          <option value={"returned"}>Returned</option>
+        </NativeSelect>
+      </FormControl>
       <Grid container xs={12} spacing={2}>
         {borrowingsArray.length > 0 ? (
           borrowingsArray.map((row) => (
