@@ -8,7 +8,7 @@ import { fetchMembers } from "../../Actions/memberActions";
 import { deleteBorrowing, confirmReturn } from "../../Actions/borrowingActions";
 import useApi from "../../Hooks/useApi";
 function BorrowingList() {
-  const { fetchData } = useApi();
+  const { fetchData, data, error, loading } = useApi();
   const dispatch = useDispatch();
   const deleteSuccess = useSelector((state) => state.borrowing.deleteSuccess);
   const deleteError = useSelector((state) => state.borrowing.deleteError);
@@ -18,24 +18,13 @@ function BorrowingList() {
   const [totalPages, setTotalPages] = useState(1);
   const [borrowingPage, setBorrowingPage] = useState(1);
   const [borrowingsPerPage, setBorrowingsPerPage] = useState(10);
-  const [loading, setLoading] = useState(false);
   const [type, setType] = useState("all");
   const borrowingsArray = borrowings.data ? Array.from(borrowings.data) : [];
   async function getBorrowings() {
-    setLoading(true);
     await fetchData({
       method: "GET",
       url: `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}`,
     })
-      .then((res) => {
-        if (res.data.status) {
-          console.log(res.data.data);
-          setBorrowings(res.data.data);
-          setTotalPages(res.data.data.last_page);
-          setLoading(false);
-        }
-      })
-      .catch((err) => console.log(err));
   }
   async function handleConfirmReturn(id, formData, book) {
     dispatch(confirmReturn(id, formData, book));
@@ -73,6 +62,15 @@ function BorrowingList() {
       console.log(returnError);
     }
   }, [returnSuccess, returnError]);
+  useEffect(()=>{
+    if(data.status) {
+      setBorrowings(data.data);
+      setTotalPages(data.data.last_page);
+    }
+    if(error) {
+      console.log(error);
+    }
+  }, [data, error])
 
   return (
     <Box display="flex" flexDirection="column" p={3} flex={1} gap={2}>
@@ -92,7 +90,7 @@ function BorrowingList() {
           <option value={"returned"}>Returned</option>
         </NativeSelect>
       </FormControl>
-      <Grid container xs={12} spacing={2}>
+      <Grid container spacing={2}>
         {borrowingsArray.length > 0 ? (
           borrowingsArray.map((row) => (
             <BorrowingCard
