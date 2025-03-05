@@ -26,7 +26,7 @@ function AddBook(props) {
       .catch((err) => console.log(err));
   }
   return (
-    <Box display="flex" alignItems="center" justifyContent="center" flex={1}>
+    <Box display="flex" alignItems="center" sx={{ minHeight: "calc(100vh - 69px)" }} justifyContent="center" >
       <BookForm
         handleSubmit={(values) => handleSubmit(values)}
         validateOnlyNumbers={(str) => props.validateOnlyNumbers(str)}

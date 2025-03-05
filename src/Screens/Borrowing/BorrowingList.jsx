@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import BorrowingCard from "../../Components/Borrowing/BorrowingCard";
-import { Pagination, Stack, Grid, Typography, Box, FormControl, InputLabel, NativeSelect } from "@mui/material";
+import {
+  Pagination,
+  Stack,
+  Grid,
+  Typography,
+  Box,
+  FormControl,
+  InputLabel,
+  NativeSelect,
+} from "@mui/material";
 import Loading from "../../Components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
@@ -23,8 +32,8 @@ function BorrowingList() {
   async function getBorrowings() {
     await fetchData({
       method: "GET",
-      url: `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}`,
-    })
+      url: `http://127.0.0.1:8000/api/borrowing?per_page=${borrowingsPerPage}&page=${borrowingPage}&type=${type}`,
+    });
   }
   async function handleConfirmReturn(id, formData, book) {
     dispatch(confirmReturn(id, formData, book));
@@ -62,15 +71,19 @@ function BorrowingList() {
       console.log(returnError);
     }
   }, [returnSuccess, returnError]);
-  useEffect(()=>{
-    if(data.status) {
+  useEffect(() => {
+    if (data.status) {
       setBorrowings(data.data);
       setTotalPages(data.data.last_page);
     }
-    if(error) {
+    if (error) {
       console.log(error);
     }
-  }, [data, error])
+  }, [data, error]);
+  useEffect(() => {
+    setBorrowingPage(1);
+    getBorrowings();
+  }, [type])
 
   return (
     <Box display="flex" flexDirection="column" p={3} flex={1} gap={2}>
