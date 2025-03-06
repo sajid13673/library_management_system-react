@@ -8,6 +8,9 @@ import {
   Container,
   Grid,
   Typography,
+  FormControl,
+  InputLabel,
+  NativeSelect,
 } from "@mui/material";
 import Loading from "../../Components/Loading";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,9 +21,8 @@ export default function BookList(props) {
   const dispatch = useDispatch();
   const booksData = useSelector((state) => state.books.books);
   const loading = useSelector((state) => state.books.loading);
-  console.log(booksData);
-  
   const [page, setPage] = useState(1);
+  const [orderBy, setOrderBy] = useState('created_at-desc');
   const perPage = 12;
   const totalPages = booksData && booksData.data ? booksData.data.last_page : 1;
   const data = Array.from(booksData && booksData.data ? booksData.data.data : []);
@@ -45,12 +47,34 @@ export default function BookList(props) {
   function handleChange(e, value) {
     setPage(value);
   }
+  const handleOrderByChange = (event) => {
+    setOrderBy(event.target.value);
+  };
   React.useEffect(() => {
     console.log("get Book");
-    dispatch(fetchBooks(page, perPage));
-  }, [page]);
+    dispatch(fetchBooks(page, perPage, orderBy));
+  }, [page, orderBy]);
   return (
     <Box p={3} flex={1} display="flex" flexDirection="column" gap={2}>
+      <FormControl sx={{ ml: "auto", mr: 3 }}>
+        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+          Sort by
+        </InputLabel>
+        <NativeSelect
+          inputProps={{
+            name: "filter",
+            id: "uncontrolled-native",
+          }}
+          onChange={handleOrderByChange}
+        >
+          <option value={"created_at-desc"}>New to old</option>
+          <option value={"created_at-asc"}>Old to new</option>
+          <option value={"title-asc"}>Title ascending</option>
+          <option value={"title-desc"}>Title descending</option>
+          <option value={"year-desc"}>Year descending</option>
+          <option value={"year-asc"}>Year ascending</option>
+        </NativeSelect>
+      </FormControl>
       <Grid container spacing={2}>
         {data.length > 0 ? (
           data.map((row) => (
