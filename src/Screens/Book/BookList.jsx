@@ -17,15 +17,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import useApi from "../../Hooks/useApi";
 export default function BookList(props) {
-  const {fetchData} = useApi();
+  const { fetchData } = useApi();
   const dispatch = useDispatch();
   const booksData = useSelector((state) => state.books.books);
   const loading = useSelector((state) => state.books.loading);
   const [page, setPage] = useState(1);
-  const [orderBy, setOrderBy] = useState('created_at-desc');
+  const [orderBy, setOrderBy] = useState("created_at-desc");
   const perPage = 12;
   const totalPages = booksData && booksData.data ? booksData.data.last_page : 1;
-  const data = Array.from(booksData && booksData.data ? booksData.data.data : []);
+  const data = Array.from(
+    booksData && booksData.data ? booksData.data.data : []
+  );
   const navigate = useNavigate();
   function handleBookEdit(id) {
     console.log(id);
