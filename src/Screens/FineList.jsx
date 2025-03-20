@@ -43,9 +43,13 @@ function FineList() {
   const [processPaymentDialog, setProcessPaymentDialog] = useState(false);
   const [confirmPaymentDialog, setConfirmPaymentDialog] = useState(false);
   const [type, setType] = React.useState("cash");
+  const [perpage, setPerPage] = useState(3);
   const [paymentMessage, setPaymentMessage] = useState(null);
   const getFines = async () => {
-    await fetchData({ method: "GET", url: `/fine?type=${DataType}` });
+    await fetchData({
+      method: "GET",
+      url: `/fine?page=${page}&per_page=${perpage}&type=${DataType}`,
+    });
   };
   const [DataType, setDataType] = useState("all");
   function handleChange(e, value) {
@@ -82,14 +86,16 @@ function FineList() {
   };
   const handleDataTypeChange = (event) => {
     setDataType(event.target.value);
+    setPage(1);
   };
   useEffect(() => {
     getFines();
-  }, [DataType]);
+  }, [DataType, page]);
   useEffect(() => {
-    if (data) {
+    if (data.status) {
       console.log(data);
-      setFines(data.data);
+      setFines(data.data?.data);
+      setTotalPages(data.data.last_page);
     }
     if (error) {
       console.error(error);
