@@ -9,11 +9,14 @@ import {
   Grid,
   Typography,
   Box,
+  FormControl,
+  InputLabel,
+  NativeSelect,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Loading from "../../Components/Loading";
 import { useSelector, useDispatch } from "react-redux";
-import {fetchMembers} from "../../Actions/memberActions"
+import { fetchMembers } from "../../Actions/memberActions";
 import useApi from "../../Hooks/useApi";
 export default function MemberList(props) {
   const { fetchData } = useApi();
@@ -21,10 +24,14 @@ export default function MemberList(props) {
   const perPage = 12;
   const membersData = useSelector((state) => state.members.members);
   const loading = useSelector((state) => state.members.loading);
+  const [orderBy, setOrderBy] = useState("created_at-desc");
   console.log(membersData);
-  const [page, setPage] = useState(1)
-  const totalPages = membersData && membersData.data ? membersData.data.last_page : [];
-  const data = Array.from(membersData && membersData.data ? membersData.data.data : []);
+  const [page, setPage] = useState(1);
+  const totalPages =
+    membersData && membersData.data ? membersData.data.last_page : [];
+  const data = Array.from(
+    membersData && membersData.data ? membersData.data.data : []
+  );
   const navigate = useNavigate();
   function handleBorrowings(id) {
     navigate("/member-borrowing-list", { state: { memberId: id } });
@@ -36,7 +43,10 @@ export default function MemberList(props) {
     navigate("/edit-member", { state: { id: id } });
   }
   async function handleDeleteMember(id) {
-    await fetchData({method: "DELETE", url: `http://127.0.0.1:8000/api/member/${id}`})
+    await fetchData({
+      method: "DELETE",
+      url: `http://127.0.0.1:8000/api/member/${id}`,
+    })
       .then((res) => {
         if (res.data.status) {
           console.log("member deleted");
@@ -48,9 +58,12 @@ export default function MemberList(props) {
   function handleChange(e, value) {
     setPage(value);
   }
-  useEffect(()=> {
-    dispatch(fetchMembers(page, perPage))
-  },[page])
+  const handleOrderByChange = (event) => {
+    setOrderBy(event.target.value);
+  };
+  useEffect(() => {
+    dispatch(fetchMembers(page, perPage, orderBy));
+  }, [page, orderBy]);
   return (
     <Box flex={1} display="flex" flexDirection="column" p={2} gap={2}>
       <Button
@@ -62,6 +75,23 @@ export default function MemberList(props) {
         ADD MEMBER
         <AddCircleIcon style={{ marginLeft: "5px" }} />
       </Button>
+      <FormControl sx={{ ml: "auto", mr: 5 }}>
+        <InputLabel variant="standard" htmlFor="uncontrolled-native">
+          Sort By
+        </InputLabel>
+        <NativeSelect
+          inputProps={{
+            name: "filter",
+            id: "uncontrolled-native",
+          }}
+          onChange={handleOrderByChange}
+        >
+          <option value={"created_at-desc"}>New to old</option>
+          <option value={"created_at-asc"}>Old to new</option>
+          <option value={"name-asc"}>Name ascending</option>
+          <option value={"name-desc"}>Name descending</option>
+        </NativeSelect>
+      </FormControl>
       <Grid container spacing={2}>
         {data.length > 0 ? (
           data.map((row) => (
