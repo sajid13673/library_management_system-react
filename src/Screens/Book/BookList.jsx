@@ -11,11 +11,14 @@ import {
   FormControl,
   InputLabel,
   NativeSelect,
+  InputBase,
+  IconButton,
 } from "@mui/material";
 import Loading from "../../Components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBooks } from "../../Actions/bookActions";
 import useApi from "../../Hooks/useApi";
+import SearchIcon from "@mui/icons-material/Search";
 export default function BookList(props) {
   const { fetchData } = useApi();
   const dispatch = useDispatch();
@@ -25,10 +28,14 @@ export default function BookList(props) {
   const [orderBy, setOrderBy] = useState("created_at-desc");
   const perPage = 12;
   const totalPages = booksData && booksData.data ? booksData.data.last_page : 1;
+  const [searchTerm, setSearchTerm] = useState("");
   const data = Array.from(
     booksData && booksData.data ? booksData.data.data : []
   );
   const navigate = useNavigate();
+  const getBooks = () => {
+    dispatch(fetchBooks(page, perPage, orderBy, searchTerm));
+  }
   function handleBookEdit(id) {
     console.log(id);
     navigate("/edit-book", { state: { id: id } });
@@ -52,9 +59,17 @@ export default function BookList(props) {
   const handleOrderByChange = (event) => {
     setOrderBy(event.target.value);
   };
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    getBooks();
+  };
   React.useEffect(() => {
     console.log("get Book");
-    dispatch(fetchBooks(page, perPage, orderBy));
+    getBooks();
   }, [page, orderBy]);
   return (
     <Box p={3} flex={1} display="flex" flexDirection="column" gap={2}>
@@ -77,6 +92,29 @@ export default function BookList(props) {
           <option value={"year-asc"}>Year ascending</option>
         </NativeSelect>
       </FormControl>
+      <Box
+          component="form"
+          onSubmit={handleSearch}
+          noValidate
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "10rem",
+            ml: "auto",
+            mr: 3,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search"
+            inputProps={{ "aria-label": "search google maps" }}
+            onChange={handleSearchChange}
+            value={searchTerm}
+          />
+          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Box>
       <Grid container spacing={2}>
         {data.length > 0 ? (
           data.map((row) => (
