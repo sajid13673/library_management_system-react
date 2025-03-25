@@ -19,8 +19,8 @@ function AddBook(props) {
     })
       .then((res) => {
         if (res.data.status) {
-          dispatch(fetchBooks());
-          navigate("/");
+          dispatch(fetchBooks({}));
+          navigate("/book-list");
         }
       })
       .catch((err) => console.log(err));

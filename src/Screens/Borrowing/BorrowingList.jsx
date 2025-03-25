@@ -63,7 +63,7 @@ function BorrowingList() {
     console.log("return success : " + returnSuccess);
 
     if (returnSuccess) {
-      dispatch(fetchBooks());
+      dispatch(fetchBooks({}));
       dispatch(fetchMembers());
       getBorrowings();
     }

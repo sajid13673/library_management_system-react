@@ -32,7 +32,7 @@ function EditBook(props) {
       .then((res) => {
         if (res.data.status) {
           navigate("/");
-          dispatch(fetchBooks(1,9));
+          dispatch(fetchBooks({}));
         }
       })
       .catch((err) => console.log(err));

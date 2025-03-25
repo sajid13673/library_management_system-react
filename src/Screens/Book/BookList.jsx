@@ -34,7 +34,7 @@ export default function BookList(props) {
   );
   const navigate = useNavigate();
   const getBooks = () => {
-    dispatch(fetchBooks(page, perPage, orderBy, searchTerm));
+    dispatch(fetchBooks({page, perPage, orderBy, searchTerm}));
   }
   function handleBookEdit(id) {
     console.log(id);
@@ -45,7 +45,7 @@ export default function BookList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("book deleted");
-          dispatch(fetchBooks(page, perPage));
+          dispatch(fetchBooks({page, perPage, orderBy, searchTerm}));
         }
       })
       .catch((err) => console.log(err));

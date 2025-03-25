@@ -1,6 +1,6 @@
 import { get } from '../Services/api';
 
-export const fetchBooks = (page, perPage, orderBy, searchTerm) => {
+export const fetchBooks = ({page, perPage, orderBy, searchTerm}) => {
   return async (dispatch, getState) => {
     dispatch({ type: 'FETCH_BOOKS_REQUEST' });
 
