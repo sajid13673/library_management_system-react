@@ -64,7 +64,7 @@ function BorrowingList() {
 
     if (returnSuccess) {
       dispatch(fetchBooks({}));
-      dispatch(fetchMembers());
+      dispatch(fetchMembers({}));
       getBorrowings();
     }
     if (returnError) {

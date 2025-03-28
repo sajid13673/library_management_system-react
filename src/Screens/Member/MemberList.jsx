@@ -38,7 +38,7 @@ export default function MemberList(props) {
   );
   const navigate = useNavigate();
   const getMembers = () => {
-    dispatch(fetchMembers(page, perPage, orderBy, searchTerm));
+    dispatch(fetchMembers({page, perPage, orderBy, searchTerm}));
   };
   function handleBorrowings(id) {
     navigate("/member-borrowing-list", { state: { memberId: id } });
@@ -57,7 +57,7 @@ export default function MemberList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("member deleted");
-          dispatch(fetchMembers(page, perPage));
+          dispatch(fetchMembers({page, perPage}));
         }
       })
       .catch((err) => console.log(err));

@@ -85,7 +85,7 @@ function AddBorrowing() {
         .then((res) => {
           if (res.data.status) {
             dispatch(fetchBooks({}));
-            dispatch(fetchMembers);
+            dispatch(fetchMembers({}));
             navigate("/");
           }
         })

@@ -17,7 +17,7 @@ function AddMember(props) {
     })
       .then((res) => {
         if (res.data.status) {
-          dispatch(fetchMembers());
+          dispatch(fetchMembers({}));
           navigate("/member-list");
         }
       })

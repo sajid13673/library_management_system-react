@@ -32,7 +32,7 @@ function EditMember(props) {
     }).then((res) => {
       if (res.data.status) {
         navigate("/member-list");
-        dispatch(fetchMembers());
+        dispatch(fetchMembers({}));
       }
     });
   };

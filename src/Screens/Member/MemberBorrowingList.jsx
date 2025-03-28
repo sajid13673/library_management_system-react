@@ -70,7 +70,7 @@ function MemberBorrowingList() {
   useEffect(() => {
     if (returnSuccess) {
       dispatch(fetchBooks({}));
-      dispatch(fetchMembers());
+      dispatch(fetchMembers({}));
       getMemberWithBorrowings();
     }
     if (returnError) {
