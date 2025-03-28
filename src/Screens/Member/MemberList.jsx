@@ -12,12 +12,15 @@ import {
   FormControl,
   InputLabel,
   NativeSelect,
+  InputBase,
+  IconButton,
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Loading from "../../Components/Loading";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchMembers } from "../../Actions/memberActions";
 import useApi from "../../Hooks/useApi";
+import SearchIcon from "@mui/icons-material/Search";
 export default function MemberList(props) {
   const { fetchData } = useApi();
   const dispatch = useDispatch();
@@ -27,12 +30,16 @@ export default function MemberList(props) {
   const [orderBy, setOrderBy] = useState("created_at-desc");
   console.log(membersData);
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const totalPages =
     membersData && membersData.data ? membersData.data.last_page : [];
   const data = Array.from(
     membersData && membersData.data ? membersData.data.data : []
   );
   const navigate = useNavigate();
+  const getMembers = () => {
+    dispatch(fetchMembers(page, perPage, orderBy, searchTerm));
+  };
   function handleBorrowings(id) {
     navigate("/member-borrowing-list", { state: { memberId: id } });
   }
@@ -61,8 +68,16 @@ export default function MemberList(props) {
   const handleOrderByChange = (event) => {
     setOrderBy(event.target.value);
   };
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    getMembers();
+  };
   useEffect(() => {
-    dispatch(fetchMembers(page, perPage, orderBy));
+    getMembers();
   }, [page, orderBy]);
   return (
     <Box flex={1} display="flex" flexDirection="column" p={2} gap={2}>
@@ -75,6 +90,29 @@ export default function MemberList(props) {
         ADD MEMBER
         <AddCircleIcon style={{ marginLeft: "5px" }} />
       </Button>
+      <Box
+        component="form"
+        onSubmit={handleSearch}
+        noValidate
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          width: "10rem",
+          ml: "auto",
+          mr: 3,
+        }}
+      >
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Search"
+          inputProps={{ "aria-label": "search google maps" }}
+          onChange={handleSearchChange}
+          value={searchTerm}
+        />
+        <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Box>
       <FormControl sx={{ ml: "auto", mr: 5 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Sort By
