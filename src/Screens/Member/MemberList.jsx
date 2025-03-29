@@ -38,7 +38,7 @@ export default function MemberList(props) {
   );
   const navigate = useNavigate();
   const getMembers = () => {
-    dispatch(fetchMembers({page, perPage, orderBy, searchTerm}));
+    dispatch(fetchMembers({ page, perPage, orderBy, searchTerm }));
   };
   function handleBorrowings(id) {
     navigate("/member-borrowing-list", { state: { memberId: id } });
@@ -57,7 +57,7 @@ export default function MemberList(props) {
       .then((res) => {
         if (res.data.status) {
           console.log("member deleted");
-          dispatch(fetchMembers({page, perPage}));
+          dispatch(fetchMembers({ page, perPage }));
         }
       })
       .catch((err) => console.log(err));
@@ -81,39 +81,41 @@ export default function MemberList(props) {
   }, [page, orderBy]);
   return (
     <Box flex={1} display="flex" flexDirection="column" p={2} gap={2}>
-      <Button
-        variant="contained"
-        sx={{ maxWidth: "15rem" }}
-        color="primary"
-        onClick={handleAddMember}
-      >
-        ADD MEMBER
-        <AddCircleIcon style={{ marginLeft: "5px" }} />
-      </Button>
-      <Box
-        component="form"
-        onSubmit={handleSearch}
-        noValidate
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          width: "10rem",
-          ml: "auto",
-          mr: 3,
-        }}
-      >
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="Search"
-          inputProps={{ "aria-label": "search google maps" }}
-          onChange={handleSearchChange}
-          value={searchTerm}
-        />
-        <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
+      <Box display="flex">
+        <Button
+          variant="contained"
+          sx={{ maxWidth: "15rem" }}
+          color="primary"
+          onClick={handleAddMember}
+        >
+          ADD MEMBER
+          <AddCircleIcon style={{ marginLeft: "5px" }} />
+        </Button>
+        <Box
+          component="form"
+          onSubmit={handleSearch}
+          noValidate
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "10rem",
+            ml: "auto",
+            mr: 3,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search"
+            inputProps={{ "aria-label": "search google maps" }}
+            onChange={handleSearchChange}
+            value={searchTerm}
+          />
+          <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Box>
       </Box>
-      <FormControl sx={{ ml: "auto", mr: 5 }}>
+      <FormControl sx={{ ml: "auto", mr: 3 }}>
         <InputLabel variant="standard" htmlFor="uncontrolled-native">
           Sort By
         </InputLabel>
